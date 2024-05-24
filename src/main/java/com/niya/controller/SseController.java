@@ -31,7 +31,7 @@ public class SseController {
 		}
 		ROUND = round;
 //		System.out.println(round);
-		sseService.sseEmitters.put(round,emitter);
+		sseService.sseEmitters.put(round,emitter); // Repository를 만들었어야했는데 만들지 안았음
 		
 		emitter.onCompletion(()->sseService.sseEmitters.remove(round));
 		emitter.onTimeout(()->sseService.sseEmitters.remove(round));
