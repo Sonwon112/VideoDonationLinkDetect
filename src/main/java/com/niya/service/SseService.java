@@ -23,8 +23,24 @@ public class SseService {
 		    }
 	}
 	
+	public void sendData(String sseId, String nickName) {
+		if(sseEmitters.containsKey(sseId)) {
+			SseEmitter sseEmitter = sseEmitters.get(sseId);
+			try {
+				sseEmitter.send(SseEmitter.event().name("part").data(nickName));
+			}catch (Exception e) {
+				// TODO: handle exception
+				sseEmitters.remove(sseId);
+			}
+		}
+	}
+	
 	public void close() {
 		sseEmitters.clear();
+	}
+	
+	public void close(int id) {
+		sseEmitters.remove(""+id);
 	}
 	
 	

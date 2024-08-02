@@ -1,0 +1,59 @@
+.toggleSwitch {
+	width: 50px;
+	height: 25px;
+	display: block;
+	position: relative;
+	border-radius: 30px;
+	background-color: #fff;
+	box-shadow: 0 0 3px 2px rgba(0 0 0 / 10%);
+	cursor: pointer;
+	margin: 5px;
+}
+  
+.toggleSwitch .toggleButton {
+	width: 20px;
+	height: 20px;
+	position: absolute;
+	top: 50%;
+	left: 4px;
+	transform: translateY(-50%);
+	border-radius: 50%;
+	background: #edf03d;
+}
+
+#toggle:checked ~ .toggleSwitch {
+	background: #edf03d;
+}
+  
+#toggle:checked ~ .toggleSwitch .toggleButton {
+	left: calc(100% - 24px);
+	background: #fff;
+}
+  
+.toggleSwitch, .toggleButton {
+	transition: all 0.2s ease-in;
+}
+#participantList{
+	height:35em;
+}
+
+.list{
+	margin:3px;
+	padding: 5px;
+    width: 20%;
+    border: 2px solid #b1cc50;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.selected{
+	text-decoration: line-through black;
+	color:gray;
+}
+
+#paging{
+	margin-top:10px;
+	width: 22%;
+    display: flex;
+    justify-content: space-around;
+}

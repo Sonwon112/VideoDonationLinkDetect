@@ -31,14 +31,19 @@ public class MainController {
 	@Autowired
 	SseService service;
 	
-	@RequestMapping(value = {"/","/index"})
+	@GetMapping("/")
 	public String index() {
 		return "index";
 	}
 	
+	@GetMapping(value = "/list")
+	public String list() {
+		return "list";
+	}
+	
 	@RequestMapping("/input")
 	public ModelAndView inputLink(@RequestParam String link, @RequestParam String round) throws Exception{
-		ModelAndView inputModelAndView = new ModelAndView("index");
+		ModelAndView inputModelAndView = new ModelAndView("list");
 		inputModelAndView.addObject("link", link);
 		inputModelAndView.addObject("round", round);
 		unit.start(link);
@@ -48,12 +53,11 @@ public class MainController {
 	}
 	
 	@RequestMapping("/end")
-	public ModelAndView end()throws Exception{
-		ModelAndView endModelAndView = new ModelAndView("index");
+	public String end()throws Exception{
 		unit.close();
 		//service.close();
 		
-		return endModelAndView;
+		return "redirect:/";
 	}
 	
 	@GetMapping("/export.do")
