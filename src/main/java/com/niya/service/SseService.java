@@ -35,6 +35,18 @@ public class SseService {
 		}
 	}
 	
+	public void sendOverlayState() {
+		if(sseEmitters.containsKey("overlay")) {
+			SseEmitter sseEmitter = sseEmitters.get("overlay");
+			try {
+				sseEmitter.send(SseEmitter.event().name("showImage").data("true"));
+			}catch (Exception e) {
+				// TODO: handle exception
+				sseEmitters.remove("overlay");
+			}
+		}
+	}
+	
 	public void close() {
 		sseEmitters.clear();
 	}

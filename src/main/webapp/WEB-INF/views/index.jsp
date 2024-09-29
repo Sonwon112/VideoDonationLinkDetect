@@ -18,6 +18,11 @@
 		<!--<input type="button" value="투표하기" onclick="chatMode('voting')"/>-->
 		<input type="button" value="점호하기" onclick="chatMode('rollcall')"/>
 	</form>
+	<form id="overlayForm" method="post">
+		<input type="password" name="chatURL" placeholder="채팅창 '오버레이 url' 입력"/>
+		<!--<input type="button" value="투표하기" onclick="chatMode('voting')"/>-->
+		<input type="button" value="오버레이 관리" onclick="chatMode('overlay')"/>
+	</form>
 	
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 	<script src="/resources/js/func.js"></script>

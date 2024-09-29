@@ -54,7 +54,7 @@ public class MainController {
 	
 	@RequestMapping("/end")
 	public String end()throws Exception{
-		unit.close();
+		unit.close(-1);
 		//service.close();
 		
 		return "redirect:/";

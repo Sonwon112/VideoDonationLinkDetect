@@ -10,5 +10,8 @@ function chatMode(mode){
         case 'rollcall':
             $('#chattingForm').attr("action","/rollcall/").submit();
             break;
+		case 'overlay':
+			$('#overlayForm').attr("action","/overlay").submit();
+			break;
     }
 }

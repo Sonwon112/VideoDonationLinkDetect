@@ -1,12 +1,18 @@
 package com.niya.model;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -54,6 +60,24 @@ public class WebDriverUnit {
 		timerMap.put(-1, timer);
 	}
 	/**
+	 * 빙플리시 영상 후원 크롤링 시 사용
+	 * @param base_url
+	 */
+	public void startOverlay(String base_url) {
+//		this.base_url = base_url;
+		System.setProperty(WEB_DRIVER_ID, WEB_DRIVER_PATH);
+		
+		WebDriver webdriver = new ChromeDriver();
+		webdriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		webdriverMap.put(-2, webdriver);
+		crawl(webdriver, base_url);
+		
+		Timer timer = new Timer();
+		timer.schedule(new crawlCheeze(webdriver,sseService), 0, 1000);
+		timerMap.put(-2, timer);
+	}
+	
+	/**
 	 * 투표, 점호 기능 사용시 크롤링하는 메소드
 	 * @param base_url
 	 */
@@ -90,18 +114,7 @@ public class WebDriverUnit {
 			e.printStackTrace();
 		}
 	}
-	
-	public void close() {
-		try {
-			WebDriver tmp = webdriverMap.get(-1);
-			tmp.close();
-			Timer timer = timerMap.get(-1);
-			timer.cancel();
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
-	}
+
 	
 	public void close(int id) {
 		try {
@@ -208,6 +221,68 @@ class crawlTask extends TimerTask{
 				sseService.sendData(SseController.ROUND, title, url);
 			}
 		}
+	}
+	
+}
+
+class crawlCheeze extends TimerTask{
+	
+	private WebDriver webdriver;
+	private String prevChat = "";
+	private SseService sseService;
+	
+	static final String chatListStart = "<div class=\"live_chatting_list_wrapper__a5XTV\">";
+	static final String chatListEnd = "</div><div class=\"live_chatting_area__hUPJw\">";
+	
+	static final String cheezeDiv = "live_chatting_list_item__0SGhw live_chatting_list_donation__Fy6Vz";
+	static final String cheezeChatbox = "<p class=\"live_chatting_donation_message_text__XbDKP\">";
+	static final String cheezeMoney = "live_chatting_donation_message_money__fE2UC";
+	
+	private List<String> donationMessage = new ArrayList<String>();
+	
+	public crawlCheeze(WebDriver webdriver, SseService sseService) {
+		this.webdriver = webdriver;
+		this.sseService = sseService;
+	}
+	
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		String source = webdriver.getPageSource();
+		
+		//if(source.contains("공일이")) {sseService.sendOverlayState();}
+			if(source.contains(cheezeDiv)) {
+				int startPos = source.indexOf(cheezeDiv);
+				source = source.substring(startPos);
+				int pos = 0;
+				while(startPos != -1) {
+					
+					startPos = source.indexOf(cheezeChatbox);
+					if(startPos == -1)break;
+					source = source.substring(startPos+cheezeChatbox.length());
+					
+					int endPos = source.indexOf("</p>");
+					String text = source.substring(0,endPos);
+					
+					if(donationMessage.size() <= pos) {
+						//텍스트 조건
+						if(text.contains("!쓰담")) {
+							sseService.sendOverlayState();
+						}
+						donationMessage.add(text);
+					}else {
+						if(!donationMessage.get(pos).equals(text))
+							donationMessage.set(pos, text);
+					}
+					pos++;
+					startPos = source.indexOf(cheezeDiv);
+					
+				}
+				
+			}
+		
+		
+
 	}
 	
 }
