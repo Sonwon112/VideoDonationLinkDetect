@@ -211,6 +211,10 @@ class crawlTask extends TimerTask{
 			
 			String title = source.substring(titleStartPoint+7,titleEndPoint-2);
 			
+			title = title.replace("&quot;", "\"");
+			title = title.replace("&amp;", "&");
+			
+			
 			int srcStartPoint = source.indexOf("embed/");
 			int srcEndPoint = source.indexOf("?", srcStartPoint);
 			

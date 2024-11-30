@@ -71,7 +71,7 @@ public class MainController {
 			PrintWriter txtPrinter = response.getWriter();
 			txtPrinter.println("순서&제목&링크");
 			for(int i = 0; i < donationList.size(); i++) {
-				String textLine = i+1 +"&"+donationList.get(i).getDonationName()+"&"+donationList.get(i).getDonationURL();
+				String textLine = i+1 +"`"+donationList.get(i).getDonationName()+"`"+donationList.get(i).getDonationURL();
 				txtPrinter.println(textLine);
 			}
 			response.flushBuffer();
