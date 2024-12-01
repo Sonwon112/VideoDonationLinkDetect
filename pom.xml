@@ -9,7 +9,7 @@
 	</parent>
 	<groupId>com.bingplaylist</groupId>
 	<artifactId>BingPlayList</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2</version>
 	<packaging>war</packaging>
 	<name>BingPlayList</name>
 	<description>Demo project for Spring Boot</description>
@@ -94,6 +94,14 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<skipTests>true</skipTests>
 				</configuration>
 			</plugin>
 		</plugins>

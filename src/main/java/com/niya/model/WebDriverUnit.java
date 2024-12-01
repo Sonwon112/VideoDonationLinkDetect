@@ -1,5 +1,7 @@
 package com.niya.model;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,6 +17,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.niya.controller.MainController;
@@ -24,11 +27,16 @@ import com.niya.service.RollCallService;
 import com.niya.service.SseService;
 import com.niya.service.VotingService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Component
 public class WebDriverUnit {
 	
 	private static String WEB_DRIVER_ID="webdriver.chrome.driver";
-	private static String WEB_DRIVER_PATH="C:/workspace/java library/chromedriver-win64/chromedriver.exe";
+	@Value("${web_driver_path}")
+	private String WEB_DRIVER_PATH;
+
 	
 	Map<Integer,WebDriver> webdriverMap = new HashMap<Integer, WebDriver>();
 	Map<Integer,Timer> timerMap = new HashMap<Integer, Timer>();
@@ -45,9 +53,23 @@ public class WebDriverUnit {
 	/**
 	 * 빙플리시 영상 후원 크롤링 시 사용
 	 * @param base_url
+	 * @throws IOException 
 	 */
-	public void start(String base_url) {
+	public void start(String base_url) throws IOException {
 //		this.base_url = base_url;
+		File f = new File(WEB_DRIVER_PATH);
+		if(!f.exists()) {
+			String userDirectoryPath = System.getProperty("user.dir");
+			log.info("can't found driver. try Find that directory ("+userDirectoryPath+")");
+			WEB_DRIVER_PATH = userDirectoryPath + "/chromedriver-win64/chromedriver.exe";
+			f = new File(WEB_DRIVER_PATH);
+			if(!f.exists()) {
+				log.error("can't found driver");
+				throw new IOException();
+			}
+		}
+		
+	
 		System.setProperty(WEB_DRIVER_ID, WEB_DRIVER_PATH);
 		
 		WebDriver webdriver = new ChromeDriver();
